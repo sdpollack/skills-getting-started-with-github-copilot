@@ -96,6 +96,7 @@
           if (details.participants && details.participants.length > 0) {
             const ul = document.createElement("ul");
             ul.className = "participants-list";
+            ul.style.marginLeft = "32px"; // Indent the list a bit more
             details.participants.forEach(email => {
               const li = document.createElement("li");
               li.textContent = email;
