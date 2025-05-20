@@ -46,5 +46,78 @@
     </footer>
 
     <script src="app.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        const activitiesList = document.getElementById("activities-list");
+        const activitySelect = document.getElementById("activity");
+
+        // Fetch activities from the backend
+        const res = await fetch("/activities");
+        const activities = await res.json();
+
+        // Clear loading text
+        activitiesList.innerHTML = "";
+
+        // Populate activity select dropdown
+        activitySelect.innerHTML = '<option value="">-- Select an activity --</option>';
+
+        Object.entries(activities).forEach(([name, details]) => {
+          // Create card
+          const card = document.createElement("div");
+          card.className = "activity-card";
+
+          // Title
+          const title = document.createElement("h4");
+          title.textContent = name;
+          card.appendChild(title);
+
+          // Description
+          const desc = document.createElement("p");
+          desc.textContent = details.description;
+          card.appendChild(desc);
+
+          // Schedule
+          const schedule = document.createElement("p");
+          schedule.innerHTML = `<strong>Schedule:</strong> ${details.schedule}`;
+          card.appendChild(schedule);
+
+          // Max participants
+          const max = document.createElement("p");
+          max.innerHTML = `<strong>Max Participants:</strong> ${details.max_participants}`;
+          card.appendChild(max);
+
+          // Participants section
+          const participantsSection = document.createElement("div");
+          participantsSection.className = "participants-section";
+          const participantsTitle = document.createElement("strong");
+          participantsTitle.textContent = "Participants:";
+          participantsSection.appendChild(participantsTitle);
+
+          if (details.participants && details.participants.length > 0) {
+            const ul = document.createElement("ul");
+            ul.className = "participants-list";
+            details.participants.forEach(email => {
+              const li = document.createElement("li");
+              li.textContent = email;
+              ul.appendChild(li);
+            });
+            participantsSection.appendChild(ul);
+          } else {
+            const none = document.createElement("span");
+            none.textContent = " None yet";
+            participantsSection.appendChild(none);
+          }
+          card.appendChild(participantsSection);
+
+          activitiesList.appendChild(card);
+
+          // Add to select dropdown
+          const option = document.createElement("option");
+          option.value = name;
+          option.textContent = name;
+          activitySelect.appendChild(option);
+        });
+      });
+    </script>
   </body>
 </html>
